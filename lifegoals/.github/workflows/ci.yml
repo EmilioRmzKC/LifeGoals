@@ -5,20 +5,25 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Build Docker image
-      run: docker build -t lifegoals .
+    - uses: actions/checkout@v3
 
     - name: Log in to Docker Hub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
+        username: enimgrey
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    - name: Build Docker image
+      run: docker build -t enimgrey/lifegoals:latest lifegoals
+
     - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/lifegoals:latest
+      run: docker push enimgrey/lifegoals:latest
+
+    - name: Push additional tags
+      run: |
+        docker tag enimgrey/lifegoals:latest enimgrey/lifegoals:${{ github.sha }}
+        docker push enimgrey/lifegoals:${{ github.sha }}

@@ -18,10 +18,41 @@ A simple Angular 18 application for managing life goals with Firebase Firestore.
 
 ## Docker
 
-Build the Docker image: `docker build -t lifegoals .`
+Build the Docker image locally:
 
-Run the container: `docker run -p 80:80 lifegoals`
+```bash
+docker build -t enimgrey/lifegoals:latest lifegoals
+```
 
-## Deployment
+Run the container locally:
 
-Deploy to Render.com using the Docker image.
+```bash
+docker run -p 80:80 enimgrey/lifegoals:latest
+```
+
+## GitHub Actions Workflow
+
+The workflow in `.github/workflows/ci.yml` will:
+
+- build the Docker image from the `lifegoals` directory
+- log in to Docker Hub using the `enimgrey` account and `DOCKER_PASSWORD` secret
+- push `latest` and a commit-specific tag to Docker Hub
+
+Make sure you add the following repository secret in GitHub:
+
+- `DOCKER_PASSWORD`
+
+## Deployment to Render.com
+
+To deploy the image on Render:
+
+1. Push your code to GitHub on the `main` branch.
+2. Confirm the workflow successfully pushes the image to Docker Hub.
+3. In Render, create a new **Web Service**.
+4. Choose **Docker Hub** as the deployment source.
+5. Enter the image name: `<dockerhub-username>/lifegoals:latest`.
+6. Set the port to `80`.
+7. Deploy the service.
+
+Render will pull the Docker image automatically and deploy your Angular app.
+
