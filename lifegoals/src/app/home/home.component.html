@@ -1,0 +1,8 @@
+<input [(ngModel)]="newMeta" placeholder="Enter a new goal" />
+<button (click)="addMeta()">Add Goal</button>
+<ul>
+  <li *ngFor="let meta of metas">
+    {{ meta.meta }}
+    <button (click)="deleteMeta(meta.id!)">Delete</button>
+  </li>
+</ul>
