@@ -1,15 +1,17 @@
-name: CI/CD
+name: Docker Image CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
@@ -17,13 +19,13 @@ jobs:
         username: enimgrey
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build Docker image
-      run: docker build -t enimgrey/lifegoals:latest lifegoals
+    - name: Build the Docker image
+      run: |
+        cd lifegoals
+        docker build . --file Dockerfile --tag enimgrey/lifegoals:latest
 
     - name: Push Docker image
-      run: docker push enimgrey/lifegoals:latest
-
-    - name: Push additional tags
       run: |
+        docker push enimgrey/lifegoals:latest
         docker tag enimgrey/lifegoals:latest enimgrey/lifegoals:${{ github.sha }}
         docker push enimgrey/lifegoals:${{ github.sha }}
