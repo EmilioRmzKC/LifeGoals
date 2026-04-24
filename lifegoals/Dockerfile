@@ -20,7 +20,9 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy built app to nginx
-COPY --from=0 /app/dist/lifegoals /usr/share/nginx/html
+# COPY --from=0 /app/dist/lifegoals /usr/share/nginx/html
+COPY --from=build /app/dist/lifegoals /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
